@@ -9,14 +9,16 @@ class LinearRegression:
         use_bias: bool = True,
         initializer_kernel: str = 'uniform_random_distribution',
         loss_function: str = 'absolute_error',
-        optimizer: str = 'linear_trick',
-        eta: float = 0.001
+        optimizer: str = 'square_trick',
+        lr: float = 0.01
     ) -> None:
         self._use_bias = use_bias
+        self._identifier_optimizer = optimizer
+        self._lr = lr
+
         self._initializer = get_kernel(initializer_kernel)
         self._loss = get_loss(loss_function)
         self._optimizer = get_optimizer(optimizer)
-        self._eta = eta
 
         self.weights: list[float] = []
         self.biases: float = 0.0
@@ -40,16 +42,17 @@ class LinearRegression:
 
         return y_hat
 
-    def backward(self, y_hat: float, y: float) -> float:
+    def backward(self, x: list[float], y: float, y_hat: float) -> float:
+        args = [self.weights, self.biases if self._use_bias else None]
+
+        if self._identifier_optimizer == 'linear_trick':
+            args.extend([y_hat, y, self._lr])
+        elif self._identifier_optimizer == 'square_trick':
+            args.extend([y_hat, y, x, self._lr])
+
         loss = self._loss(y_hat=y_hat, y=y)
 
-        weights, biases = self._optimizer(
-            weights=self.weights,
-            biases=self.biases if self._use_bias else None,
-            y_hat=y_hat,
-            y=y,
-            eta=self._eta
-        )
+        weights, biases = self._optimizer(*args)
 
         self.weights = weights
         self.biases = biases

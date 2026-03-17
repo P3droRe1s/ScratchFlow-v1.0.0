@@ -3,27 +3,27 @@ def linear_trick(
     biases: float,
     y_hat: float,
     y: float,
-    eta: float = 0.001
+    lr: float = 0.001
 ) -> tuple[list[float], float]:
     if y > y_hat and y > 0:
-        weights = [w + eta for w in weights]
+        weights = [w + lr for w in weights]
 
         if biases is not None:
-            biases += eta
+            biases += lr
     elif y > y_hat and y < 0:
-        weights = [w - eta for w in weights]
+        weights = [w - lr for w in weights]
 
         if biases is not None:
-            biases += eta
+            biases += lr
     elif y < y_hat and y > 0:
-        weights = [w - eta for w in weights]
+        weights = [w - lr for w in weights]
 
         if biases is not None:
-            biases -= eta
+            biases -= lr
     elif y < y_hat and y < 0:
-        weights = [w + eta for w in weights]
+        weights = [w + lr for w in weights]
 
         if biases is not None:
-            biases -= eta
+            biases -= lr
 
     return weights, biases
