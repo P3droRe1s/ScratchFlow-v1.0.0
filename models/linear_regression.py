@@ -40,12 +40,12 @@ class LinearRegression:
 
         return y_hat
 
-    def _backward(self, y_hat: float, y: float) -> float:
+    def backward(self, y_hat: float, y: float) -> float:
         loss = self._loss(y_hat=y_hat, y=y)
 
         weights, biases = self._optimizer(
             weights=self.weights,
-            biases=self.biases if self._use_bias else [],
+            biases=self.biases if self._use_bias else None,
             y_hat=y_hat,
             y=y,
             eta=self._eta
